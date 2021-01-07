@@ -46,16 +46,8 @@ def assign_props(dictionary, input_str, y):
     dictionary[input_str] = y
     return input_str
 
-
-# Source: https://stackoverflow.com/questions/44369504/
-# how-to-convert-entire-dataframe-values-to-float-in-pandas
 vals = hoki.dummy_dict.values()
-vals = [hoki.dummy_dict[keyword] for keyword in ['timestep', 'age',
-                                                 'log(R1)', 'log(T1)',
-                                                 'log(L1)', 'M1', 'X',
-                                                 'P_bin', 'log(a)', 'M2',
-                                                 'log(R2)', 'log(T2)',
-                                                 'log(L2)']]
+vals = [hoki.dummy_dict[keyword] for keyword in []]
 cols_to_keep = ["col" + str(v + 1) for v in vals]
 # According to the BPASS v2.2.1 manual, much of
 # columns 50 and onward

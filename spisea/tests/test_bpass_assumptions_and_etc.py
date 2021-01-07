@@ -89,18 +89,6 @@ class test_reformatter(unittest.TestCase):
                 if not (os.path.isfile("{}/NEWBINMODS/NEWSECMODS/{}_2/{}".format(hoki.MODELS_PATH, metallicity, x[len(destination + "/xxx/FitsModelss"):-8]))):
                     print("Error in ", x)
                     return
-        print(len(x1))
-        print(len(g))
-        print(len(x1)==len(g))
-        print(len(x2))
-        print(len(j))
-        print(len(x2)==len(j))
-        print(len(x3))
-        print(len(h))
-        print((len(x3)==len(h)))
-        print(len(x4))
-        print(len(k))
-        print((len(x4)==len(k)))
         if (len(x1)==len(g)) and (len(x2)==len(j)) and (len(x3)==len(h)) and (len(x4)==len(k)):
             print("Passed! "+metallicity)
             return True
@@ -303,7 +291,9 @@ class test_reformatter(unittest.TestCase):
             sec_files = set(li)
             caught_no = caught_no.union(sec_files)
             [assign_props(names_to_prop, name, (x,)) for name in sec_files]
-        return caught_no == set(glob.glob("{}/{}*.fits".format(input_dir, metallicity)))
+        print(len(caught_no))
+        print(len(set(glob.glob("{}/{}/*.fits".format(input_dir, metallicity)))))
+        return caught_no == set(glob.glob("{}/{}/*.fits".format(input_dir, metallicity)))
 
     def test_reformatter_coverage(self, destination="/g/lu/scratch/ryotainagaki/BPASS_tester_newReformatTest/"):
         mets = ["zem5", "zem4", "zem3", "z001",
@@ -325,7 +315,7 @@ class test_reformatter(unittest.TestCase):
                 "z030", "z040"]
         for met in mets:
             self.assertTrue(self.extractor(met, source))
-    def test_extractor2(self, source="/g/lu/scratch/ryotainagaki/BPASS_tester_newReformatTestIsolated/"):
+    def test_extractor2(self, source="/g/lu/scratch/ryotainagaki/BPASS_tester_newReformatTest/"):
         print("Also testing for whether all files in the input directory will be covered" +
               " by the infrastructure/assumptions of the extractor function")
         mets = ["zem5", "zem4", "zem3", "z001",
@@ -333,8 +323,8 @@ class test_reformatter(unittest.TestCase):
                 "z008", "z010", "z014", "z020",
                 "z030", "z040"]
         for met in mets:
-          result = self.extractor_check_all(met, source)
-          print(met+" ", result)
-          self.assertTrue(result)
+            result = self.extractor_check_all(met, source)
+            print(met+" ", result)
+            self.assertTrue(result)
 if __name__ == '__main__':
     unittest.main()
