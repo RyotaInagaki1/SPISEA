@@ -1631,14 +1631,6 @@ class BPASS(StellarEvolution):
             0.040,
             ]
         self.models_dir = models_dir + "/BPASS/v2.2/"
-        self.mass_list = [round(0.1, 1)] + [round(0.12 + x * 0.020, 2)
-                                            for x in range(95)]
-        self.mass_list = self.mass_list + [round(2.05 + x * 0.05, 2)
-                                           for x in range(20)]
-        self.mass_list = self.mass_list + [round(3.1 + 0.1 * x, 1)
-                                           for x in range(70)]
-        self.mass_list = self.mass_list + [11 + x for x in range(90)] \
-            + [125 + 25 * x for x in range(8)] + [400] + [500]
         self.z_solar = 0.020
         # The possible Metallicities of a BPASS Stellar model
         self.z_file_map = {
@@ -1657,7 +1649,7 @@ class BPASS(StellarEvolution):
             0.04000: 'z040/',
             }
 
-    def isochrone(self, dir_in='', age=1 * 10 ** 8.0, metallicity=0.0):
+    def isochrone(self, age=1 * 10 ** 8.0, metallicity=0.0):
         """
         This function adds several necessary
         columns (e.g. isWR, logg, and
@@ -1728,8 +1720,6 @@ class BPASS(StellarEvolution):
         closest_metallicity = min([x for x in self.z_file_map],
                                   key=lambda x: abs(metallicity - x))
         z_dir = self.z_file_map[closest_metallicity]
-        if dir_in:
-            self.models_dir = dir_in
         # Use the full path to the desired isochrone file.
 
         full_iso_file = self.models_dir + 'iso/' + z_dir + iso_file
