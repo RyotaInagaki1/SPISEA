@@ -1779,7 +1779,7 @@ class Isochrone_Binary(Isochrone):
             return
         # Get solar metallicity models for a population at a specific age.
         # Takes about 0.1 seconds.
-        evol = evo_model.isochrone(dir_in=filepath, age=10 ** logAge,
+        evol = evo_model.isochrone(age=10 ** logAge,
                                    metallicity=metallicity)
 
         # Eliminate cases where log g is less than 0
