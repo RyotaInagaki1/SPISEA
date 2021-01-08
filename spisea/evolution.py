@@ -1790,8 +1790,3 @@ class BPASS(StellarEvolution):
         iso.meta['metallicity_act'] = np.log10(closest_metallicity /
                                                self.z_solar)
         return iso
-
-
-class Isochrone(object):
-    def __init__(self, log_age):
-        self.log_age = log_age
