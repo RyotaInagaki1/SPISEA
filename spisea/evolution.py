@@ -12,6 +12,8 @@ import pylab as py
 from spisea.utils import objects
 from astropy import constants as cs
 from astropy import units
+from spisea import IsochroneMakerReformattedVersionNew
+from spisea.IsochroneMakerReformattedVersionNew import extractor, reformatter
 un = units
 
 logger = logging.getLogger('evolution')
@@ -1648,6 +1650,38 @@ class BPASS(StellarEvolution):
             0.03000: 'z030/',
             0.04000: 'z040/',
             }
+    def run_formatter(self, destination="/g/lu/scratch/ryotainagaki/" +
+                      "BPASS_tester_newReformatTest/",
+                      metallicity=["zem5", "zem4", "z001", "z002", "z003", "z004",
+                                   "z006", "z008", "z010", "z014",
+                                   "z020", "z030", "z040"]):
+        """
+        Reformat all BPASS stellar system models in  HOKI.MODELS_PATH
+        using the reformatter function into fits tables with the following
+        naming convention:
+        Fitsmodels<original name of BPASS stellar system model file>.fits
+        The files will be stored in destination/<BPASS metallicity> directory
+        """
+        reformatter(destination, metallicity)
+        return
+    
+    def run_extractor(self, source="/g/lu/scratch/ryotainagaki/" +
+                      "BPASS_tester_newReformatTest/",
+                      metallicity=["zem5", "zem4", "z001", "z002", "z003",
+                                   "z004", "z006", "z008", "z010", "z014",
+                                   "z020", "z030", "z040"],
+                     destination='/g/lu/models//evolution//BPASS/v2.2/',
+                     times=51):
+        """
+        Uses the reformatted BPASS stellar system model files in source directory
+        to create isochrones for log10(Age) = 6.0, 6.1, ... , 6.0 + 0.1*(x-times)
+        and for every metallicity. Stores those isochrones into the
+        destination/iso/<metallicity> directory.
+        """
+        for met in metallicity:
+            for x in range(times):
+                extractor(round(6.0 + 0.1 * x,1), met, source,
+                          destination, 0.05)
 
     def isochrone(self, age=1 * 10 ** 8.0, metallicity=0.0):
         """
