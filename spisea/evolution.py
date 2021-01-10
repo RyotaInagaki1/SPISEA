@@ -1713,6 +1713,7 @@ class BPASS(StellarEvolution):
         metallicity mass fraction from the formula introduced
         in Grevesse & Noels 1993.)
         Z_solar = 0.020
+
         Output
         ------
         A more informative version of the preprocessed isochrone.
