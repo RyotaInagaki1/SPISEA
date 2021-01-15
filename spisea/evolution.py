@@ -1701,10 +1701,6 @@ class BPASS(StellarEvolution):
 
         Parameters
         ----------
-        dir_in: string
-        The string representation of the absolute path to the directory
-        of preprocessed isochrones.This is for customization/Testing purposes.
-        For folks do not want to store in the models directory.
         age: float or double
         The age of the isochrone in years
         metallicity: float or double
