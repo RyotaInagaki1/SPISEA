@@ -1,6 +1,6 @@
 # Ryota Inagaki's fork of SPISEA
 Note that the work here is in progress and that there will be more contributions and changes to the code heading into spring 2021.
-For documentation (User oriented and for fall 2020 version):
+For documentation (in progress and will be in LaTex form soon):
 https://docs.google.com/document/d/1p6FabRT29atZ1DXsyIxF29IeTrWXjSVIXF2e7LzlxSk/edit?usp=sharing
 
 For Write up for Fall 2020:
