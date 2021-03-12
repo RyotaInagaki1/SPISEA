@@ -532,7 +532,7 @@ def extractor(age, metallicity, input_dir, bpass_evo_dir,
         reduced = Table.from_pandas(bigOne)
         if not os.path.isdir('{}/iso/{}/'.format(bpass_evo_dir, metallicity)):
             os.makedirs('{}/iso/{}/'.format(bpass_evo_dir, metallicity))
-        reduced.write("{}iso/{}/iso{}.fits".format(bpass_evo_dir,
+        reduced.write("{}/iso/{}/iso{}.fits".format(bpass_evo_dir,
                                                    metallicity, str(age)),
                       format='fits',
                       overwrite=True)

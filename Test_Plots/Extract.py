@@ -15,13 +15,13 @@ def main():
     # from the two functions
     # O stands for old
     reformatterO(fit_dirO, ["z020"])
+    reformatter(fit_dir, ["z020"])
     for x in range(30):
         t1 = time.time()
         extractorO(round(7.0 + 0.1 * x,1),"z020", fit_dirO,
                    iso_dirO, 0.05)
         t2 = time.time()
         print(t2 - t1)
-    reformatter(fit_dir, ["z020"])
     print("Begin New Method")
     for x in range(30):
         t1 = time.time()

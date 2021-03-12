@@ -42,6 +42,11 @@ def adjustment_helper(min_mass):
         Based on the minimum mass represented by an IMF, creates part
         of adjustment factor imposed onto the mass inputted into the
         cluster mass generator of the isochrone.
+        This is more of a band-aid fix to my code for Fall-2020 code that
+        seems to help increase the initial mass of the Binary_Cluster
+        to where it should be. Observations were made on primarily
+        Salpetter 1955 and the 
+        Further development for adjustment_helper and adjustment factors.
     """
     if (min_mass[0] > 0.4):
         return -min_mass[0]
@@ -175,9 +180,7 @@ class Binary_Cluster(Cluster):
         if inst:
             if (iso.logage < 8.0):
                 mass, isMulti, compMass, sysMass = \
-                imf.generate_cluster((1.8 - 2.1 *(iso.logage - 8.0) +
-                                      adjustment_helper(imf._m_limits_low)) *
-                                     cluster_mass,seed=seed)
+                imf.generate_cluster(cluster_mass,seed=seed)
             else:
                 mass, isMulti, compMass, sysMass = \
                 imf.generate_cluster((1.8 + 0.4 * (iso.logage - 8.0) +
@@ -359,6 +362,8 @@ class Binary_Cluster(Cluster):
                 star_systems[filt][cdx_rem] = np.full(len(cdx_rem), np.nan)
             # Give remnants a magnitude of nan, so they can be
             # filtered out later when calculating flux.
+        for filt in self.filt_names:
+            star_systems[filt+"_prim"] = copy.deepcopy(star_systems[filt])
         return star_systems
 
     def make_primaries_and_companions(self, star_systems, compMass):
@@ -700,8 +705,8 @@ class Binary_Cluster(Cluster):
             companions['system_idx'][x] = \
             np.where(star_systemsPrime['designation'] ==
                      companions['system_idx'][x])[0][0]
-        
-        
+        for filt in self.filt_names:
+            star_systemsPrime[filt+"_prim"] = copy.deepcopy(star_systemsPrime[filt])
         #####
         # Make Remnants for non-merged stars with nan
         # and for stars with 0 Kelvin Teff
@@ -1946,61 +1951,59 @@ class Isochrone_Binary(Isochrone):
                     continue
                 # Check if the star has physical parameter values
                 # Before we create the atmospheres!
-                exclus_cond = (tab[ii]['phase']!=110)
-                # Cond exists to make if statement a bit prettier...
-                cond = (np.isfinite(gravity) and gravity != 0.0 and
-                        np.isfinite(L) and L > 0.0 and
-                        np.isfinite(T) and T > 0.0 and
-                        np.isfinite(R) and R > 0.0 and exclus_cond)
-                if cond:
-                    if (T == np.nan or T == 0):
-                        # If there's a bug, we need to know!
-                        print("Temp in kelvin: ", T)
-                    if phase[ii] == 101:
-                        star = wd_atm_func(temperature=T, gravity=gravity,
-                                           metallicity=self.metallicity,
-                                           verbose=False)
-                    else:
-                        star = atm_func(temperature=T, gravity=gravity,
-                                        metallicity=self.metallicity,
-                                        rebin=rebin)
-
-                    # Trim wavelength range down to
-                    # JHKL range (0.5 - 5.2 microns)
-                    star = spectrum.trimSpectrum(star, wave_range[0],
-                                                 wave_range[1])
-
-                    # Convert into flux observed at Earth (unreddened)
-                    star *= (R / distance) ** 2  # in erg s^-1 cm^-2 A^-1
-
-                    # Redden the spectrum. This doesn't take much time at all.
-                    red = red_law.reddening(AKs).resample(star.wave)
-                    star *= red
-                    # Save the final spectrum to our spec_list for later use.
-                    atm_list.append(star)
                 else:
-                    # No atmosphere! (Merged star of compact remnant.)
-                    atm_list.append(None)
-                    # Make sure that nonphysical stars/potential
-                    # compact remnant end up getting
-                    # at the very minimmum
-                    # Really policy should be that there is a 
-                    # non-visible or nonexistent star
-                    # and thus we need to make the star have
-                    # L, T, R as undefined
-                    # as a consequence of R =undef, we should
-                    # make logg undefined as well.
-                    # note that -inf has been used as undefined and
-                    # hence we should note L, T, R will become zero
-                    # as result of exponentiation.
-                    tab[ii]['L'] = np.nan
-                    tab[ii]['Teff'] = np.nan
-                    tab[ii]['R'] = np.nan
-                    tab[ii]['logg'] = np.nan
+                    exclus_cond = (tab[ii]['phase']!=110)
+                    # Cond exists to make if statement a bit prettier...
+                    cond = (np.isfinite(gravity) and gravity != 0.0 and
+                            np.isfinite(L) and L > 0.0 and
+                            np.isfinite(T) and T > 0.0 and
+                            np.isfinite(R) and R > 0.0 and exclus_cond)
+                    if cond:
+                        if phase[ii] == 101:
+                            star = wd_atm_func(temperature=T, gravity=gravity,
+                                               metallicity=self.metallicity,
+                                               verbose=False)
+                        else:
+                            star = atm_func(temperature=T, gravity=gravity,
+                                            metallicity=self.metallicity,
+                                            rebin=rebin)
+
+                        # Trim wavelength range down to
+                        # JHKL range (0.5 - 5.2 microns)
+                        star = spectrum.trimSpectrum(star, wave_range[0],
+                                                     wave_range[1])
+
+                        # Convert into flux observed at Earth (unreddened)
+                        star *= (R / distance) ** 2  # in erg s^-1 cm^-2 A^-1
+
+                        # Redden the spectrum. This doesn't take much time at all.
+                        red = red_law.reddening(AKs).resample(star.wave)
+                        star *= red
+                        # Save the final spectrum to our spec_list for later use.
+                        atm_list.append(star)
+                    else:
+                         # No atmosphere! (Merged star of compact remnant.)
+                        atm_list.append(None)
+                        # Make sure that nonphysical stars/potential
+                        # compact remnant end up getting
+                        # at the very minimmum
+                        # Really policy should be that there is a 
+                        # non-visible or nonexistent star
+                        # and thus we need to make the star have
+                        # L, T, R as undefined
+                        # as a consequence of R =undef, we should
+                        # make logg undefined as well.
+                        # note that -inf has been used as undefined and
+                        # hence we should note L, T, R will become zero
+                        # as result of exponentiation.
+                        tab[ii]['L'] = np.nan
+                        tab[ii]['Teff'] = np.nan
+                        tab[ii]['R'] = np.nan
+                        tab[ii]['logg'] = np.nan
                       
-            self.singles = singles
-            self.primaries = primaries
-            self.secondaries = secondaries
+        self.singles = singles
+        self.primaries = primaries
+        self.secondaries = secondaries
         # Append all the meta data to the summary table.
         for tab in (singles, primaries, secondaries):
             tab.meta['REDLAW'] = red_law.name
@@ -2058,10 +2061,10 @@ class Isochrone_Binary(Isochrone):
             # Loop through each star in the isochrone and
             # do the filter integration
             print('Starting synthetic photometry')
-            for x in self.pairings:
+            for x in self.table_pairings:
                 print(x)
                 listofStars = self.name_to_list[x]
-                table = self.pairings[x]
+                table = self.table_pairings[x]
                 length_of_list = len(listofStars)
                 for ss in range(length_of_list):
                     star = listofStars[ss]
