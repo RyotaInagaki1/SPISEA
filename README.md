@@ -1,10 +1,11 @@
-# Ryota Inagaki's fork of SPISEA
-Note that the work here is in progress and that there will be more contributions and changes to the code heading into spring 2021.
-For documentation (User oriented and for fall 2020 version):
+# Ryota Inagaki's fork of SPISEA Internal Release of Fall 2020 code
+This is my internal release of SPISEA with binary star systems to the Moving Universe Lab for the Fall 2020 semester. Note that the work here is in progress and that there will be more contributions and changes to the code heading into spring 2021.
+
+For "user-oriented" documentation (version as of Jan. 2021) for Fall 2020 Internal Release:
 https://docs.google.com/document/d/1p6FabRT29atZ1DXsyIxF29IeTrWXjSVIXF2e7LzlxSk/edit?usp=sharing
 
-For Write up for Fall 2020:
-https://docs.google.com/document/d/1QxyOt4Ojv6h0dVD9XzmmzfrJzHYaYQM6gwicPISwjt4/edit?usp=sharing
+For draft of write-up for Fall 2020 version of code/ base edition of project write-up:
+https://drive.google.com/file/d/1JJPDhA7Z6Vr58Zn0xVYo-JwRwjE3p2OQ/view?usp=sharing
 
 For the in-development Spring 2021 version, please consult the dev branch.
 # SPISEA: Stellar Population Interface for Stellar Evolution and Atmospheres
